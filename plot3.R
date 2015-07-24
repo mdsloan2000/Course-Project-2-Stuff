@@ -10,19 +10,23 @@ plot3 <- function() {
         fileloader()
         
 # attach the ggplot2 library
+        library("plyr", lib.loc="~/R/win-library/3.2")
         library("ggplot2", lib.loc="~/R/win-library/3.2")
 
 # Read the rds files "./Source_Classification_Code.rds" and "./summarySCC_PM25.rds" into local variables.
         SCC <- readRDS("./Source_Classification_Code.rds")
         NEI <- readRDS("./summarySCC_PM25.rds")
-        NEI <- subset(NEI, fips == "24510")  #Subsets the Baltimore Data
-
-# plot commands go here.
-#         barplot((tapply(NEI$Emissions, NEI$year, FUN=sum)),main="Total Annual Emmissions for Baltimore City")
-#         png(file = "./plot3.png")
-#         barplot((tapply(NEI$Emissions, NEI$year, FUN=sum)),main="Total Annual Emmissions for Baltimore City")
-#         dev.off()
         
+# Ready the data        
+        NEI <- subset(NEI, fips == "24510")  #Subsets the Baltimore Data
+        foo2 <- ddply(NEI, .(type, year), summarize, sum = round(sum(Emissions), 2))
+        
+# plot commands go here.
+        qplot(as.character(year), sum, data=foo2, facets = .~type ) + geom_bar(stat = "Identity")
+        png(file = "./plot3.png")
+        qplot(as.character(year), sum, data=foo2, facets = .~type ) + geom_bar(stat = "Identity")
+        dev.off()
+
 # clean up files
         cleanup()
         
