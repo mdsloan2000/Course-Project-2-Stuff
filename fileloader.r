@@ -6,7 +6,6 @@ fileloader <- function() {
                 print("Files Do Not Exist ... Extracting Only") 
         }
         unzip("./exdata-data-NEI_data.zip")
-        return (TRUE)
 }
 
 cleanup <- function() {
